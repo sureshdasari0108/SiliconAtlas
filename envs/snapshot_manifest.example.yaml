@@ -1,0 +1,8 @@
+# EXAMPLE format for pinning live runs (Stage 2). No live runs exist yet.
+manifest_version: 1
+models:
+  - name: "<org>/<model-name>"
+    weights_access: open        # open | api
+    snapshot_id: "sha256:<weights-or-endpoint-digest>"
+    runtime: "<inference stack + version>"
+decoding_defaults: { temperature: 0.7, top_p: 0.95 }

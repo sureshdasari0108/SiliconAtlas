@@ -1,0 +1,48 @@
+# Registry record S001 — sunk-cost scenario (Many Labs 1 anchor)
+registry_id: S001
+short_name: sunk_cost_ml1
+title: "Sunk-cost effect: ticket paid vs. free, likelihood of attending in bad weather"
+original_citation: >
+  Oppenheimer, D. M., Meyvis, T., & Davidenko, N. (2009). Instructional manipulation
+  checks. Journal of Experimental Social Psychology, 45(4), 867-872. [sunk-cost
+  scenario used as sample task]
+human_replication_citation: >
+  Klein, R. A., et al. (2014). Investigating variation in replicability: A "many labs"
+  replication project. Social Psychology, 45(3), 142-152.
+evidence_tier: 1            # multi-lab human replication exists
+construct_domain: judgment_and_decision
+effect_type: main
+
+design:
+  type: between_subjects
+  conditions: [paid_ticket, free_ticket]   # [expected-higher, expected-lower]
+  dv: "self-reported likelihood of attending despite severe weather"
+  dv_scale_range: [1, 9]
+
+human_ground_truth:
+  source: "Many Labs 1 aggregate"
+  verification_status: approximate_pending_verification   # VERIFY against Klein et al. (2014) before any live scoring
+  n_total_approx: 6300
+  paid_condition: { mean_approx: 6.4, sd_approx: 2.3 }
+  free_condition: { mean_approx: 5.5, sd_approx: 2.5 }
+  effect_size_d_approx: 0.37
+  direction: "paid > free"
+
+equivalence_band_halfwidth: 0.20   # DRAFT; frozen value set in pre-registration
+
+stimulus:
+  variant_id: isomorph_v2
+  template: stimuli/isomorph_v2.txt
+  condition_clauses:
+    paid_ticket: "bought a ticket for $80"
+    free_ticket: "were given a free ticket by a friend"
+  note: >
+    Original Many Labs text is NOT redistributed here (see stimuli/NOTICE.md).
+    Isomorph equivalence checks are a Stage-2 milestone; none have been run.
+
+# Parameters for the MOCK demonstration runner ONLY. These numbers are
+# arbitrary and exist so the pipeline can be exercised end to end. They are
+# not predictions, not pilot results, and carry no evidential meaning.
+mock_demo_params:
+  paid_ticket: { mean: 7.6, sd: 1.1 }
+  free_ticket: { mean: 6.6, sd: 1.25 }

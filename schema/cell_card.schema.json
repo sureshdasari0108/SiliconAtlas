@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/silicon-sample-atlas/cell_card.schema.json",
+  "title": "Silicon Sample Atlas — cell card",
+  "description": "One study x model x configuration cell. run_mode is the integrity switch: only 'live' cards may carry a transferability grade with evidential value.",
+  "type": "object",
+  "required": ["schema_version", "card_id", "run_mode", "study", "configuration", "results", "scores", "provenance"],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^cell-card/" },
+    "card_id": { "type": "string", "minLength": 3 },
+    "run_mode": {
+      "type": "string",
+      "enum": ["live", "mock", "synthetic_example"],
+      "description": "live = real model run; mock = pipeline demonstration with synthetic responses; synthetic_example = hand-built schema illustration."
+    },
+    "atlas_version": { "type": "string" },
+    "_meta": { "type": "object" },
+    "study": {
+      "type": "object",
+      "required": ["registry_id", "evidence_tier", "construct_domain", "effect_type"],
+      "additionalProperties": true,
+      "properties": {
+        "registry_id": { "type": "string", "pattern": "^S[0-9]{3}$" },
+        "short_name": { "type": "string" },
+        "evidence_tier": { "type": "integer", "enum": [1, 2] },
+        "construct_domain": {
+          "type": "string",
+          "enum": ["judgment_and_decision", "motivation", "fairness_justice", "social_preference", "coordination", "identity", "other"]
+        },
+        "effect_type": { "type": "string", "enum": ["main", "interaction"] },
+        "human_ground_truth": {
+          "type": "object",
+          "properties": {
+            "verification_status": { "type": "string", "enum": ["verified", "approximate_pending_verification"] }
+          }
+        }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "required": ["model", "decoding", "sample_sizes", "seeds"],
+      "additionalProperties": true,
+      "properties": {
+        "model": {
+          "type": "object",
+          "required": ["name", "weights_access"],
+          "properties": {
+            "name": { "type": "string" },
+            "weights_access": { "type": "string", "enum": ["open", "api", "mock"] },
+            "snapshot_id": { "type": "string" }
+          }
+        },
+        "decoding": {
+          "type": "object",
+          "required": ["temperature"],
+          "properties": { "temperature": { "type": "number", "minimum": 0 } }
+        },
+        "sample_sizes": {
+          "type": "object",
+          "required": ["matched_n_per_condition"],
+          "properties": { "matched_n_per_condition": { "type": "integer", "minimum": 1 } }
+        },
+        "seeds": { "type": "object" },
+        "stimulus_variant": { "type": "object" },
+        "persona_scheme": { "type": "object" }
+      }
+    },
+    "contamination": {
+      "type": "object",
+      "properties": {
+        "grade": { "type": ["string", "null"], "enum": ["A", "B", "C", "D", null] },
+        "status": { "type": "string" }
+      }
+    },
+    "results": {
+      "type": "object",
+      "required": ["primary_matched_n"],
+      "additionalProperties": true,
+      "properties": {
+        "primary_matched_n": {
+          "type": "object",
+          "required": ["effect_size_d", "direction"],
+          "properties": {
+            "effect_size_d": { "type": "number" },
+            "d_ci95": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+            "direction": { "type": "string" }
+          }
+        },
+        "comparison_to_human": { "type": "object" },
+        "distributional_fidelity": { "type": "object" }
+      }
+    },
+    "robustness": { "type": "object" },
+    "scores": {
+      "type": "object",
+      "required": ["grade"],
+      "additionalProperties": true,
+      "properties": {
+        "grade": { "type": "string" },
+        "transferability_score": { "type": ["number", "null"] },
+        "transferability_interval": { "type": ["array", "null"] },
+        "admissible_uses": { "type": "array", "items": { "type": "string" } },
+        "inadmissible_uses": { "type": "array", "items": { "type": "string" } }
+      },
+      "allOf": [
+        {
+          "description": "Integrity rule: non-live cards must not carry a numeric transferability score.",
+          "if": { "properties": { "transferability_score": { "type": "number" } }, "required": ["transferability_score"] },
+          "then": { "properties": { "evidential": { "const": true } } }
+        }
+      ]
+    },
+    "ethics": {
+      "type": "object",
+      "properties": { "non_endorsement": { "type": "string" } }
+    },
+    "reproduce": { "type": "object" },
+    "provenance": {
+      "type": "object",
+      "required": ["harness_version"],
+      "properties": {
+        "harness_version": { "type": "string" },
+        "git_commit": { "type": "string" },
+        "license": { "type": "string" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "description": "Integrity rule enforced structurally: if run_mode is not 'live', scores.transferability_score must be null and grade must start with 'N/A'.",
+      "if": { "properties": { "run_mode": { "enum": ["mock", "synthetic_example"] } } },
+      "then": {
+        "properties": {
+          "scores": {
+            "properties": {
+              "evidential": { "const": false }
+            },
+            "required": ["evidential"]
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "run_mode": { "const": "live" } } },
+      "then": {
+        "properties": { "scores": { "properties": { "evidential": { "const": true } }, "required": ["evidential"] } }
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+Weeks ago, you {{TICKET_CLAUSE}} to a professional hockey game taking place
+tonight in a city about an hour's drive away. On the day of the game, a heavy
+snowstorm moves in: the roads are slick, the drive will be slow and unpleasant,
+and the temperature has dropped well below freezing. The game will also be
+broadcast live on television.
+
+On a scale from 1 to 9, where 1 means you would definitely stay home and watch
+on TV and 9 means you would definitely drive to the game, how likely are you to
+attend? Answer with a single number from 1 to 9.
