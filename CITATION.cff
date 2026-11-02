@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 title: "The Silicon Sample Atlas (Stage-1 prototype)"
-message: "Placeholder citation metadata — set real authors and DOI before release."
+message: "citation metadata"
 type: software
 authors:
   - family-names: "Dasari"
