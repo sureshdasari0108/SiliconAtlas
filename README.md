@@ -77,4 +77,4 @@ endorsement of replacing human participants. See the `ethics` block required in 
 
 ## License
 
-Code: MIT (`LICENSE`). Data and cards: CC-BY-4.0. Authors: [team placeholder — set before pushing].
+Code: MIT (`LICENSE`). Data and cards: CC-BY-4.0. Authors: Suresh Dasari.
